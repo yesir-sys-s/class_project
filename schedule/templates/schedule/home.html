@@ -1,0 +1,18 @@
+{% extends 'schedule/base.html' %}
+
+{% block content %}
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-4 fw-bold">Welcome to Class Schedule</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">Organize your academic schedule efficiently. Keep track of your classes, professors, and rooms all in one place.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            {% if user.is_authenticated %}
+                <a href="{% url 'schedule-list' %}" class="btn btn-primary btn-lg px-4 gap-3">View Schedule</a>
+                <a href="{% url 'class-create' %}" class="btn btn-outline-primary btn-lg px-4">Add Class</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-4 gap-3">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

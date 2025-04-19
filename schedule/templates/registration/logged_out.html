@@ -1,0 +1,18 @@
+{% extends 'schedule/base.html' %}
+
+{% block content %}
+<head>
+    <meta http-equiv="refresh" content="0; url={% url 'home' %}">
+</head>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h2 class="card-title">Logged Out</h2>
+                <p>You have been successfully logged out.</p>
+                <p>Redirecting to home page...</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

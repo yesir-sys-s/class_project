@@ -1,0 +1,80 @@
+{% extends 'schedule/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Weekly Schedule</h1>
+    <form class="d-flex" method="get">
+        <input class="form-control me-2" type="search" placeholder="Search classes..." name="search" value="{{ request.GET.search }}">
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+    </form>
+</div>
+
+<div class="nav nav-tabs mb-4" id="view-tabs" role="tablist" style="border-bottom: 2px solid var(--border-color);">
+    <button class="nav-link active px-4 py-3" data-bs-toggle="tab" data-bs-target="#list-view">
+        <i class="bi bi-list-ul me-2"></i>List View
+    </button>
+    <button class="nav-link px-4 py-3" data-bs-toggle="tab" data-bs-target="#calendar-view">
+        <i class="bi bi-calendar3-week me-2"></i>Calendar View
+    </button>
+</div>
+
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="list-view">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Day</th>
+                        <th>Time</th>
+                        <th>Subject</th>
+                        <th>Room</th>
+                        <th>Professor</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for class in object_list %}
+                    <tr>
+                        <td>{{ class.get_day_display }}</td>
+                        <td>{{ class.start_time|time:"H:i" }} - {{ class.end_time|time:"H:i" }}</td>
+                        <td>{{ class.subject }}</td>
+                        <td>{{ class.room }}</td>
+                        <td>{{ class.professor|default:"-" }}</td>
+                        <td>
+                            <a href="{% url 'class-update' class.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a href="{% url 'class-delete' class.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No classes scheduled</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="tab-pane fade" id="calendar-view">
+        <div class="calendar-grid">
+            {% for day, classes in classes_by_day.items %}
+            <div class="day-column">
+                <h3 class="day-header">
+                    <i class="bi bi-calendar-date me-2"></i>{{ day }}
+                </h3>
+                {% for class in classes %}
+                <div class="class-card" style="top: {% widthratio class.start_time.hour 24 100 %}%">
+                    <h4>{{ class.subject }}</h4>
+                    <p><i class="bi bi-clock me-1"></i>{{ class.start_time|time:"H:i" }} - {{ class.end_time|time:"H:i" }}</p>
+                    <p><i class="bi bi-geo-alt me-1"></i>{{ class.room }}</p>
+                    {% if class.professor %}
+                    <p><i class="bi bi-person me-1"></i>{{ class.professor }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
